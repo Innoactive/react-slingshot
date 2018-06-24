@@ -9,6 +9,7 @@ import historyApiFallback from 'connect-history-api-fallback';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
+import proxyMiddleware from 'http-proxy-middleware';
 import config from '../webpack.config.dev';
 
 const bundler = webpack(config);
@@ -47,7 +48,10 @@ browserSync({
       }),
 
       // bundler should be the same as above
-      webpackHotMiddleware(bundler)
+      webpackHotMiddleware(bundler),
+
+      // proxy api to django server
+      proxyMiddleware('/api', { target: 'http://localhost', changeOrigin: true })
     ]
   },
 
